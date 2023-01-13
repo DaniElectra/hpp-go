@@ -21,7 +21,7 @@ import (
 type Server struct {
 	hppEventHandles           map[string][]func(*HppRequest)
 	hppClientResponses        map[uint32](chan []byte)
-    passwordFromPIDHandler    func(pid uint32) (string, uint32)
+	passwordFromPIDHandler    func(pid uint32) (string, uint32)
 	accessKey                 string
 	nexVersion                int
 }
@@ -41,14 +41,14 @@ func (server *Server) Listen(address string, certFile string, keyFile string) {
 		}
 
 		accessKeySignatureBytes, err := hex.DecodeString(accessKeySignature)
-        if err != nil {
+		if err != nil {
 			logger.Error(fmt.Sprintf("[Hpp] Invalid access key signature - %s", accessKeySignature))
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-        passwordSignatureBytes, err := hex.DecodeString(passwordSignature)
-        if err != nil {
+		passwordSignatureBytes, err := hex.DecodeString(passwordSignature)
+		if err != nil {
 			logger.Error(fmt.Sprintf("[Hpp] Invalid password signature - %s", passwordSignature))
 			w.WriteHeader(http.StatusBadRequest)
 			return
@@ -74,15 +74,15 @@ func (server *Server) Listen(address string, certFile string, keyFile string) {
 			return
 		}
 
-        pidPassword, errorCode := server.passwordFromPIDHandler(uint32(pid))
-        if errorCode != 0 {
+		pidPassword, errorCode := server.passwordFromPIDHandler(uint32(pid))
+		if errorCode != 0 {
 			rmcRequest := hppRequest.RMCRequest()
-            callID := rmcRequest.CallID()
+			callID := rmcRequest.CallID()
 
 			errorResponse := NewRMCResponse(callID)
-            errorResponse.SetError(errorCode)
+			errorResponse.SetError(errorCode)
 
-            _, err = w.Write(errorResponse.Bytes())
+			_, err = w.Write(errorResponse.Bytes())
 			if err != nil {
 				logger.Error(err.Error())
 			}
@@ -95,13 +95,13 @@ func (server *Server) Listen(address string, certFile string, keyFile string) {
 		// When the password signature fails, the server returns error PythonCore::ValidationError
 		if !bytes.Equal(generatedPasswordSignature, passwordSignatureBytes) {
 			logger.Error("[Hpp] Password calculated signature did not match")
-            rmcRequest := hppRequest.RMCRequest()
-            callID := rmcRequest.CallID()
+			rmcRequest := hppRequest.RMCRequest()
+			callID := rmcRequest.CallID()
 
 			validationErrorResponse := NewRMCResponse(callID)
-            validationErrorResponse.SetError(Errors.PythonCore.ValidationError)
+			validationErrorResponse.SetError(Errors.PythonCore.ValidationError)
 
-            _, err = w.Write(validationErrorResponse.Bytes())
+			_, err = w.Write(validationErrorResponse.Bytes())
 			if err != nil {
 				logger.Error(err.Error())
 			}
@@ -144,12 +144,12 @@ func (server *Server) Listen(address string, certFile string, keyFile string) {
 
 // On sets the data event handler
 func (server *Server) On(event string, handler func(*HppRequest)) {
-    server.hppEventHandles[event] = append(server.hppEventHandles[event], handler)
+	server.hppEventHandles[event] = append(server.hppEventHandles[event], handler)
 }
 
 // Emit runs the given event handle
 func (server *Server) Emit(event string, request *HppRequest) {
-    eventName := server.hppEventHandles[event]
+	eventName := server.hppEventHandles[event]
 	for i := 0; i < len(eventName); i++ {
 		handler := eventName[i]
 		go handler(request)
@@ -183,7 +183,7 @@ func (server *Server) SetPasswordFromPIDFunction(handler func(pid uint32) (strin
 
 // Send writes data to client
 func (server *Server) Send(response *HppResponse) {
-    pid := response.PID()
+	pid := response.PID()
 	payload := response.Payload()
 	server.hppClientResponses[pid] <- payload
 }

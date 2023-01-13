@@ -1,7 +1,7 @@
 package hpp
 
 import (
-    "errors"
+	"errors"
 
 	nex "github.com/PretendoNetwork/nex-go"
 )

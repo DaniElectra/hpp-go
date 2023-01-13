@@ -32,8 +32,8 @@ func NewHppResponse(rmcResponse RMCResponse, pid uint32) (*HppResponse) {
 	hppResponse := HppResponse{}
 
 	data := rmcResponse.Bytes()
-    hppResponse.payload = data
-    hppResponse.pid = pid
+	hppResponse.payload = data
+	hppResponse.pid = pid
 
 	return &hppResponse
 }

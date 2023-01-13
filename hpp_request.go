@@ -6,7 +6,7 @@ import (
 
 // HppRequest represents all of the contents of an Hpp request
 type HppRequest struct {
-    server     *Server
+	server     *Server
 	pid        uint32
 	payload    []byte
 	rmcRequest RMCRequest
